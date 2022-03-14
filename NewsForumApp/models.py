@@ -23,6 +23,9 @@ class Author(models.Model):
 class Category(models.Model):
     categoryName = models.CharField(max_length=128, unique=True)
 
+    def __str__(self):
+        return f'{self.categoryName.title()}'
+
 
 class Post(models.Model):
 
@@ -51,6 +54,9 @@ class Post(models.Model):
             return "{:123}...".format(self.postText)
         else:
             return self.postText
+
+    def __str__(self):
+        return f'{self.postAuthor.authorAccount.username}: {self.postTitle}'
 
 
 class PostCategory(models.Model):
