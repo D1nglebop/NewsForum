@@ -12,11 +12,9 @@ Posts
 <!-- В контенте на странице мы выводим все товары -->
 {% block content %}
 <h1>Все статьи</h1>
-
 <hr>
+
     {% if posts %} <!-- Выводим товары только, если они есть с помощью тега if -->
-        <h3> Количество статей: {{ posts|length }}</h3>
-        <hr>
 
         <table align="center" border="1" width="1150">
             <tr>
@@ -35,6 +33,9 @@ Posts
             </tr>
         {% for post in posts %} <!-- Для каждого товара будете генерироваться новая строчка, т. е. новый html-код. При этом сам цикл работает точно также, как и в Python. product — переменная цикла, т. е. наш товар, взятый из общего списка -->
             <tr>
+                <td>
+                    <a href="{% url 'Post' post.postTitle %}">{{ post.postTitle }}</a> <!-- При нажатии на имя товара в таблице нас теперь будет перекидывать на страницу с информацией о товаре -->
+                </td>
                 <td align="left" width="20%">
                     {{ post.postTitle|censor_words }} <!-- не забываем, что переменные в шаблоне ничем не отличаются от переменных в Python. Здесь также можно получать доступ к полям класса. Например, здесь мы выводим имя, в следующем столбце описание, и т. д.  -->
                 </td>
@@ -53,4 +54,52 @@ Posts
     {% else %} <!-- Если товаров нет, то говорим, что товаров нет ;) -->
         <h2>Статей нет!</h2>
     {% endif %}
+
+{% if is_paginated %}
+
+    <!-- Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу -->
+    {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+    {% endif %}
+
+    <!-- Показываем только текущую страницу и ближайшие к ней, чтобы список не тянулся и не захламлял страницу -->
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a>{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    <!-- Если есть следующая страница, то даём ссылку на неё и на самую последнюю страницу -->
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">>>></a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+
+{% endif %}
+
+
+<!-- <form method="POST">-->
+<!--     {% csrf_token %}-->
+<!--    -->
+<!--        <label for="title">Название</label>-->
+<!--        <input name="postTitle" type="text">-->
+
+<!--        <label for="text">Текст статьи</label>-->
+<!--        <input name="postText" type="text">-->
+
+<!--        &lt;!&ndash; Здесь будет список категорий.  &ndash;&gt;-->
+<!--         <select name="category" size="1">-->
+
+<!--      {% for category in categories %}-->
+<!--        <option value="{{ category.id }}">-->
+<!--            {{ category.categoryName }}-->
+<!--        </option>-->
+<!--      {% endfor %}-->
+<!--    </select>-->
+<!--        <input type="submit" value="Добавить статью">-->
+<!--    </form>-->
+
 {% endblock content %}
