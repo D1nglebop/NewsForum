@@ -19,6 +19,9 @@ class Author(models.Model):
         self.authorRating = post_rating * 3 + comment_rating
         self.save()
 
+    def __str__(self):
+        return f'{self.authorAccount.username}'
+
 
 class Category(models.Model):
     categoryName = models.CharField(max_length=128, unique=True)
@@ -57,6 +60,9 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.postAuthor.authorAccount.username}: {self.postTitle}'
+
+    def get_absolute_url(self):  # добавим абсолютный путь, чтобы после создания нас перебрасывало на страницу с товаром
+        return f'/posts/{self.id}'
 
 
 class PostCategory(models.Model):

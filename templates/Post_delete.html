@@ -1,0 +1,44 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+ 
+{% block title %} News delete {% endblock title %}
+
+
+ 
+{% block content %}
+<h2>Вы действительно хотите удалить данную статью?</h2>
+<table align="center" border="1" width="1150">
+    <thead>
+        <td width="30%">
+            Название статьи
+        </td>
+        <td width="10%">
+            Автор
+        </td>
+        <td width="20%">
+            Дата публикации
+        </td>
+        <td>
+            Текст статьи
+        </td>
+    </thead>
+    <tr>
+        <td align="left" width="20%">
+            {{ post.postTitle|censor_words }}
+        </td>
+        <td width="10%">
+            {{ post.postAuthor.authorAccount.username }}
+        </td>
+        <td width="20%">
+            {{ post.postTime|date:'d M Y H:i:s' }}
+        </td>
+        <td align="left">{{ post.postText|truncatechars:50|censor_words}}
+        </td>
+    </tr>
+</table>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Подтвердить"></form>
+{% endblock content %} 

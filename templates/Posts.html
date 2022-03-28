@@ -18,27 +18,34 @@ Posts
 
         <table align="center" border="1" width="1150">
             <tr>
-                <td width="30%">
+                <td width="30%" style="font-weight:bold;font-size:20px">
                     Название статьи
                 </td>
-                <td width="10%">
+                <td width="10%" style="font-weight:bold;font-size:20px">
                     Автор
                 </td>
-                <td width="20%">
+                <td width="20%" style="font-weight:bold;font-size:20px">
                     Дата публикации
                 </td>
-                <td>
+                <td style="font-weight:bold;font-size:20px">
                     Текст статьи
                 </td>
             </tr>
         {% for post in posts %} <!-- Для каждого товара будете генерироваться новая строчка, т. е. новый html-код. При этом сам цикл работает точно также, как и в Python. product — переменная цикла, т. е. наш товар, взятый из общего списка -->
             <tr>
-                <td>
-                    <a href="{% url 'Post' post.postTitle %}">{{ post.postTitle }}</a> <!-- При нажатии на имя товара в таблице нас теперь будет перекидывать на страницу с информацией о товаре -->
-                </td>
-                <td align="left" width="20%">
-                    {{ post.postTitle|censor_words }} <!-- не забываем, что переменные в шаблоне ничем не отличаются от переменных в Python. Здесь также можно получать доступ к полям класса. Например, здесь мы выводим имя, в следующем столбце описание, и т. д.  -->
-                </td>
+            <td align="center" width="30%">
+                <a href="{% url 'post_details' post.id %}" style="color:green;font-size:20px">
+                    {{ post.postTitle|censor_words }}
+                </a>
+                <br>
+                <a href="{% url 'post_update' post.id %}" style="font-size:10px">
+                    <u>Редактировать</u>
+                </a> <!-- добавим ссылку на редактирование товара-->
+                <a href="{% url 'post_delete' post.id %}" style="font-size:10px">
+                    <u> Удалить </u>
+                </a> <!-- добавим ссылку на удаление товара-->
+            </td>
+
                 <td width="10%">
                     {{ post.postAuthor.authorAccount.username }}
                 </td>
@@ -54,6 +61,8 @@ Posts
     {% else %} <!-- Если товаров нет, то говорим, что товаров нет ;) -->
         <h2>Статей нет!</h2>
     {% endif %}
+
+<a href="{% url 'post_create' %}">Добавить новую статью</a> <br>
 
 {% if is_paginated %}
 

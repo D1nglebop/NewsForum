@@ -5,13 +5,13 @@
 
 <!-- Название у нас будет proudcts -->
 {% block title %}
-Posts
+Search
 {% endblock title %}
 
 
 <!-- В контенте на странице мы выводим все товары -->
 {% block content %}
-    <form method="GET">
+    <form method="GET" style="font-size:14px">
         {{ filter.form }} <!-- Форму от фильтров за нас сделает django. А вот кнопку, увы придётся делать самому -->
         <input type="submit" value="Найти">
     </form>
@@ -56,29 +56,27 @@ Posts
         <h2>Нет статей, соответствующих поиску.</h2>
     {% endif %}
 
-<!--{% if is_paginated %}-->
+{% if is_paginated %}
 
-<!--  &lt;!&ndash; Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу &ndash;&gt;-->
-<!--    {% if page_obj.has_previous %}-->
-<!--        <a href="?page=1">First</a>-->
-<!--        <a href="?page={{ page_obj.previous_page_number }}"><<<</a>-->
-<!--    {% endif %}-->
+    {% if page_obj.has_previous %}
+        <a href="?{{ request.get_full_path|update_page:1}}">First</a>
+        <a href="?{{ request.get_full_path|update_page:page_obj.previous_page_number}}"><<<</a>
+    {% endif %}
 
 
-<!--    &lt;!&ndash; Показываем только текущую страницу и ближайшие к ней, чтобы список не тянулся и не захламлял страницу &ndash;&gt;-->
-<!--    {% for num in page_obj.paginator.page_range %}-->
-<!--        {% if page_obj.number == num %}-->
-<!--            <a>{{ num }}</a>-->
-<!--        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}-->
-<!--            <a href="?page={{ num }}">{{ num }}</a>-->
-<!--        {% endif %}-->
-<!--    {% endfor %}-->
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a>{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?{{ request.get_full_path|update_page:num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
 
-<!--    &lt;!&ndash; Если есть следующая страница, то даём ссылку на неё и на самую последнюю страницу &ndash;&gt;-->
-<!--    {% if page_obj.has_next %}-->
-<!--        <a href="?page={{ page_obj.next_page_number }}">>>></a>-->
-<!--        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>-->
-<!--    {% endif %}-->
 
-<!--{% endif %}-->
+    {% if page_obj.has_next %}
+        <a href="?{{ request.get_full_path|update_page:page_obj.next_page_number }}">>>></a>
+        <a href="?{{ request.get_full_path|update_page:page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+
+{% endif %}
 {% endblock content %}
