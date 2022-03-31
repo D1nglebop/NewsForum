@@ -2,10 +2,14 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from datetime import datetime
 from django.shortcuts import render
 from django.core.paginator import Paginator
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
+
 
 from .models import Post, Category
 from .filters import PostFilter
-from .forms import PostForm
+from .forms import PostForm, UserForm
+
 
 
 class PostList(ListView):
@@ -69,4 +73,13 @@ class PostDeleteView(DeleteView):
     template_name = 'Post_delete.html'
     queryset = Post.objects.all()
     success_url = '/news/'
+
+
+class UserUpdate(LoginRequiredMixin, UpdateView):
+    template_name = 'User_update.html'
+    form_class = UserForm
+    success_url = '/news/'
+
+    def get_object(self, **kwargs):
+        return self.request.user
 

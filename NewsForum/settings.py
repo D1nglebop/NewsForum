@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-_lx)7b@9$^tjig3$)=dms0y$#!rhll!_@*3p28az++u+gqq-&(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'fpages',
     'django_filters',
+    'sign',
+    'protect',
 ]
 
 SITE_ID = 1
@@ -122,6 +124,8 @@ USE_I18N = True
 
 USE_TZ = False
 
+LOGIN_URL = 'sign/login/'
+LOGIN_REDIRECT_URL = '/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
