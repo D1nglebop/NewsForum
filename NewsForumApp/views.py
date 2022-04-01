@@ -1,9 +1,13 @@
+from django.contrib.auth.decorators import login_required
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from datetime import datetime
 from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
+from django.contrib.auth.mixins import PermissionRequiredMixin
+
 
 
 from .models import Post, Category
@@ -53,15 +57,17 @@ class PostListSearch(ListView):
         }
 
 
-class PostCreateView(CreateView):
+class PostCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'Post_create.html'
     form_class = PostForm
     success_url = '/news/'
+    permission_required = ('NewsForumApp.add_post',)
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(PermissionRequiredMixin, UpdateView):
     template_name = 'Post_create.html'
     form_class = PostForm
+    permission_required = ('NewsForumApp.change_post',)
 
     def get_object(self, **kwargs):
         id = self.kwargs.get('pk')
@@ -79,7 +85,13 @@ class UserUpdate(LoginRequiredMixin, UpdateView):
     template_name = 'User_update.html'
     form_class = UserForm
     success_url = '/news/'
+    login_url = '/accounts/login/'
+    redirect_field_name = 'redirect_to'
 
     def get_object(self, **kwargs):
         return self.request.user
 
+
+class MyView(PermissionRequiredMixin, View):
+    permission_required = ('NewsForumApp.add_post',
+                           'NewsForumApp.change_post')
